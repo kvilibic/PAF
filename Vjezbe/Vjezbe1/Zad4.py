@@ -6,8 +6,8 @@ def funkcija(x1,x2,y1,y2):
     if b>=0:
         predznak = "+"
     else:
-        predznak = ""
+        predznak = "-"
 
-    print("y = ",round(a,2),"x ",predznak, round(b,2))
+    print("Jednadžba pravca je y = ",round(a,2),"x",predznak, round(abs(b),2))
 
-funkcija(4,3,12,17)
+funkcija(4,3,12,-3)
