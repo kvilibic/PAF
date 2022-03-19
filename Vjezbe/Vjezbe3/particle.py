@@ -2,67 +2,60 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 class Particle:
-    def __init__(self, v_0, theta, x_0, y_0):
+    def __init__(self):
+        self.t = []
+        self.x = []
+        self.y = []
+        self.v_y = []
+        self.v_x = []
+        self.a_x = []
+        self.a_y = []
+
+    
+    def set_in_cond(self, v_0, theta, x_0, y_0, dt):
+        self.t.append(0)
+        self.x.append(x_0)
+        self.y.append(y_0)
+        self.v_x.append(v_0*np.cos((theta/360)*2*np.pi))
+        self.v_y.append(v_0*np.sin((theta/360)*2*np.pi))
+        self.a_x.append(0)
+        self.a_y.append(-9.81)
+        self.dt = dt
         self.v_0 = v_0
-        self.theta = (theta/360)*2*np.pi
-        self.x_0 = x_0
-        self.y_0 = y_0
-        self.x = x_0
-        self.y = y_0
-        
-
-    def reset():
-        del self.v_0
-        del self.theta
-        del self.x_0
-        del self.y_0
+        self.theta = theta
 
 
-    def move(dt):
-        vx = v0*np.cos((theta/360)*2*np.pi)
-        vy = v0*np.sin((theta/360)*2*np.pi)
-        x = x + vx*dt
-        y = y + vy*dt
-        self.x = x
-        self.y = y
-        print("Nove koordinate su ",x,y)
+    def reset(self):
+        self.__init__()
+
+
+    def __move(self):
+        self.t.append(self.t[-1] + self.dt)
+        self.x.append(self.x[-1] + self.v_x[-1]*self.dt)
+        self.v_x.append(self.v_x[-1])
+        self.a_x.append(0)
+        self.y.append(self.y[-1] + self.v_y[-1]*self.dt)
+        self.v_y.append(self.v_y[-1] + self.a_y[-1]*self.dt)
+        self.a_y.append(-9.81)
 
     
     def range(self):
-        v0x = v0*np.cos((theta/360)*2*np.pi)
-        v0y = v0*np.sin((theta/360)*2*np.pi)
-        t = [0.]
-        x = [0.]
-        y = [0.]
+        while (self.y[-1]>=0):
+            self.__move()
+        return(self.x[-1])
+
     
-        for i in range(0,int(v0/dt)):
-            vy = a*t[i]
-            if y[i] + v0y*dt - vy*dt >=0:
-                t.append((i+1)*dt)
-                x.append(x[i] + v0x*dt)
-                y.append(y[i] + v0y*dt - vy*dt)
-            else:
-                 break
-    
-        self.range = v0x*t[-1]
+    def range_analitical(self):
+        self.d = (self.v_0**2)/9.81*np.sin((2*(self.theta/360)*2*np.pi))
+        return self.d
+
 
 
     def plot_trajectory(self):
-        vx = v0*np.cos((theta/360)*2*np.pi)
-        vy = v0*np.sin((theta/360)*2*np.pi)
-        t = [0.]
-        x = [0.]
-        y = [0.]
-        dt = 0.01
-        for i in range(0, 1000):
-            t.append(i*dt)
-            x.append(x[i] + vx*dt)
-            y.append(y[i] + vy*dt)
-       
-        plt.plot(x,y)
-        plt.set(xlabel='x [m]', ylabel='y [m]', title='x-y graf')
+        plt.plot(self.x, self.y)
+        plt.xlabel("x [m]", loc='right')
+        plt.ylabel("y [m]", loc='top')
         plt.grid()
-        plt.set_aspect('equal')
 
         plt.show()
 
