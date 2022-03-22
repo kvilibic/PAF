@@ -5,12 +5,13 @@ def jednoliko_gibanje(F, M, vrijeme):
     t = [0.]
     x = [0.]
     v = [0.]
-    a = F/M
+    a = [F/M]
     dt = vrijeme/1000
     for i in range(0,1000):
-        t.append(i*dt)
-        v.append(v[i] + a*dt)
-        x.append(x[i] + v[i]*dt)
+        t.append(t[-1] + dt)
+        v.append(v[-1] + a[-1]*dt)
+        x.append(x[-1] + v[-1]*dt)
+        a.append(a[-1])
 
     
     fig, axs = plt.subplots(3)
@@ -28,17 +29,13 @@ def jednoliko_gibanje(F, M, vrijeme):
     axs[1].set_xlabel("t [s]", loc='right')
     axs[1].set_ylabel("v [m/s]", loc='top')
 
-    ac = []
-    for el in t:
-        ac.append(a)
-    axs[2].plot(t,ac)
+    axs[2].plot(t,a)
     axs[2].set_title("a-t graf")
     axs[2].grid()
     axs[2].set_xlabel("t [s]", loc='right')
     axs[2].set_ylabel("a [m/s2]", loc='top')
 
     plt.show()
-
 
 
 def kosi_hitac(v0, theta):
@@ -49,9 +46,9 @@ def kosi_hitac(v0, theta):
     y = [0.]
     dt = 0.01
     for i in range(0, 1000):
-        t.append(i*dt)
-        x.append(x[i] + vx*dt)
-        y.append(y[i] + vy*dt)
+        t.append(t[-1] + dt)
+        x.append(x[-1] + vx*dt)
+        y.append(y[-1] + vy*dt)
        
     fig, axs = plt.subplots(2,2)
     fig.delaxes(axs[1,1])
